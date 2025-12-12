@@ -7,6 +7,7 @@ def _str_is_int(data):
     """Verify if data is integer."""
     return re.match(r"^[-+]?(0|[1-9][0-9]*)$", str(data))
 def _str_is_float(data):
+    # test
     """Verify if data is float."""
     return re.match(
         r"^[-+]?(0|[1-9][0-9]*)(\.[0-9]*)?(e[-+]?[0-9]+)?$",
