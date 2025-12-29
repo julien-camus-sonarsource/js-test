@@ -4,3 +4,4 @@ var confirmTokenRotation = 'youhou!';
 // test2
 var addIssue = 'new issue';
 var addIssue2 = 'new issue 2';
+var addIssue3 = 'new issue 3';
