@@ -5,12 +5,15 @@ function hello(name) {
 const result = hello("World");
 console.log(result);
 
-// Bug: null dereference - no check before accessing property
+// Fixed: null check before accessing property
 function getUserName(user) {
+    if (!user || !user.name) {
+        return "Unknown";
+    }
     return user.name.toUpperCase();
 }
 
-// Bug: SQL injection vulnerability
+// Fixed: parameterized query
 function findUser(db, username) {
-    return db.query("SELECT * FROM users WHERE name = '" + username + "'");
+    return db.query("SELECT * FROM users WHERE name = $1", [username]);
 }
