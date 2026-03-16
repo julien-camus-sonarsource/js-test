@@ -4,8 +4,13 @@ function hello(name) {
 
 const result = hello("World");
 console.log(result);
-var issue = "oops";
-var issue2 = "oops2";
-var issue3 = "oops3";
-var issue4 = "oops4";
-var issue5 = "oops5";
+
+// Bug: null dereference - no check before accessing property
+function getUserName(user) {
+    return user.name.toUpperCase();
+}
+
+// Bug: SQL injection vulnerability
+function findUser(db, username) {
+    return db.query("SELECT * FROM users WHERE name = '" + username + "'");
+}
