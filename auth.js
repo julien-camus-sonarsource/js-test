@@ -4,29 +4,31 @@
 
 const crypto = require('crypto');
 
-// Bug 1: SQL injection vulnerability - concatenating user input directly
+// Fixed: Use parameterized query to prevent SQL injection
 function findUserByEmail(db, email) {
-  const query = "SELECT * FROM users WHERE email = '" + email + "'";
-  return db.execute(query);
+  const query = "SELECT * FROM users WHERE email = ?";
+  return db.execute(query, [email]);
 }
 
-// Bug 2: Hardcoded secret / credential leak
-const JWT_SECRET = "super_secret_key_12345";
-
+// Fixed: Read secret from environment variable
 function generateToken(userId) {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error('JWT_SECRET environment variable is required');
   const payload = JSON.stringify({ userId, exp: Date.now() + 3600000 });
-  return crypto.createHmac('sha256', JWT_SECRET).update(payload).digest('hex');
+  return crypto.createHmac('sha256', secret).update(payload).digest('hex');
 }
 
-// Bug 3: Missing null check leading to potential crash
+// Fixed: Add null-safe access with optional chaining and fallback
 function getUserDisplayName(user) {
-  return user.profile.firstName + ' ' + user.profile.lastName;
+  const first = user?.profile?.firstName ?? 'Unknown';
+  const last = user?.profile?.lastName ?? '';
+  return `${first} ${last}`.trim();
 }
 
-// Bug 4: Insecure password comparison (timing attack vulnerable)
+// Fixed: Use timing-safe comparison to prevent timing attacks
 function verifyPassword(inputPassword, storedHash) {
   const inputHash = crypto.createHash('sha256').update(inputPassword).digest('hex');
-  return inputHash === storedHash;
+  return crypto.timingSafeEqual(Buffer.from(inputHash), Buffer.from(storedHash));
 }
 
 module.exports = { findUserByEmail, generateToken, getUserDisplayName, verifyPassword };
