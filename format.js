@@ -22,4 +22,8 @@ function center(str, length, char = ' ') {
   return char.repeat(left) + str + char.repeat(pad - left);
 }
 
-module.exports = { padLeft, padRight, center };
+function repeat(str, times) {
+  return str.repeat(Math.max(0, times));
+}
+
+module.exports = { padLeft, padRight, center, repeat };
