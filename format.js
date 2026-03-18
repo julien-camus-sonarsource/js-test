@@ -3,16 +3,12 @@
  */
 
 function padLeft(str, length, char = ' ') {
-  while (str.length < length) {
-    str = char + str;
-  }
+  while (str.length < length) str = char + str;
   return str;
 }
 
 function padRight(str, length, char = ' ') {
-  while (str.length < length) {
-    str = str + char;
-  }
+  while (str.length < length) str = str + char;
   return str;
 }
 
@@ -26,4 +22,8 @@ function repeat(str, times) {
   return str.repeat(Math.max(0, times));
 }
 
-module.exports = { padLeft, padRight, center, repeat };
+function truncate(str, max, suffix = '...') {
+  return str.length <= max ? str : str.slice(0, max - suffix.length) + suffix;
+}
+
+module.exports = { padLeft, padRight, center, repeat, truncate };
