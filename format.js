@@ -9,4 +9,17 @@ function padLeft(str, length, char = ' ') {
   return str;
 }
 
-module.exports = { padLeft };
+function padRight(str, length, char = ' ') {
+  while (str.length < length) {
+    str = str + char;
+  }
+  return str;
+}
+
+function center(str, length, char = ' ') {
+  const pad = Math.max(0, length - str.length);
+  const left = Math.floor(pad / 2);
+  return char.repeat(left) + str + char.repeat(pad - left);
+}
+
+module.exports = { padLeft, padRight, center };
