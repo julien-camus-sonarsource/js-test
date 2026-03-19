@@ -15,6 +15,7 @@ class Cart {
   constructor() {
     this.items = [];
     this.discountCode = null;
+    this.taxRate = 0.08;
   }
 
   addItem(item) {
@@ -37,17 +38,22 @@ class Cart {
     return validCodes[code];
   }
 
+  subtotal() {
+    return this.items.reduce((sum, item) => sum + item.subtotal(), 0);
+  }
+
+  tax() {
+    return this.subtotal() * this.taxRate;
+  }
+
   total() {
-    const subtotal = this.items.reduce((sum, item) => sum + item.subtotal(), 0);
-    if (!this.discountCode) return subtotal;
-    const discountRate = { SAVE10: 0.1, SAVE20: 0.2 }[this.discountCode];
-    return subtotal * (1 - discountRate);
+    const discountRate = this.discountCode ? { SAVE10: 0.1, SAVE20: 0.2 }[this.discountCode] : 0;
+    return this.subtotal() * (1 - discountRate) + this.tax();
   }
 
   checkout(paymentService) {
     if (this.items.length === 0) throw new Error("Cart is empty");
-    const amount = this.total();
-    return paymentService.charge(amount);
+    return paymentService.charge(this.total());
   }
 }
 
@@ -63,5 +69,4 @@ const cart = new Cart();
 cart.addItem(new CartItem("a", "Widget", 9.99, 2));
 cart.addItem(new CartItem("b", "Gadget", 24.99, 1));
 cart.applyDiscount("SAVE10");
-const payment = new PaymentService();
-console.log(cart.checkout(payment));
+console.log(cart.checkout(new PaymentService()));
