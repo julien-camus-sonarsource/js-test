@@ -47,8 +47,10 @@ class Cart {
   }
 
   total() {
+    const sub = this.subtotal();
     const discountRate = this.discountCode ? { SAVE10: 0.1, SAVE20: 0.2 }[this.discountCode] : 0;
-    return this.subtotal() * (1 - discountRate) + this.tax();
+    const discounted = sub * (1 - discountRate);
+    return discounted + discounted * this.taxRate;
   }
 
   checkout(paymentService) {
