@@ -12,10 +12,10 @@ class CartItem {
 }
 
 class Cart {
-  constructor() {
+  constructor(taxRate = 0.08) {
     this.items = [];
     this.discountCode = null;
-    this.taxRate = 0.08;
+    this.taxRate = taxRate;
   }
 
   addItem(item) {
@@ -67,8 +67,8 @@ class PaymentService {
   }
 }
 
-const cart = new Cart();
+const cart = new Cart(0.1);
 cart.addItem(new CartItem("a", "Widget", 9.99, 2));
 cart.addItem(new CartItem("b", "Gadget", 24.99, 1));
-cart.applyDiscount("SAVE10");
+cart.applyDiscount("SAVE20");
 console.log(cart.checkout(new PaymentService()));
