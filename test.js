@@ -13,22 +13,21 @@ class CartItem {
 
 class Cart {
   constructor(taxRate = 0.08) {
-    this.items = [];
+    this.items = new Map();
     this.discountCode = null;
     this.taxRate = taxRate;
   }
 
   addItem(item) {
-    const existing = this.items.find((i) => i.id === item.id);
-    if (existing) {
-      existing.quantity += item.quantity;
+    if (this.items.has(item.id)) {
+      this.items.get(item.id).quantity += item.quantity;
     } else {
-      this.items.push(item);
+      this.items.set(item.id, item);
     }
   }
 
   removeItem(id) {
-    this.items = this.items.filter((i) => i.id !== id);
+    this.items.delete(id);
   }
 
   applyDiscount(code) {
@@ -39,7 +38,7 @@ class Cart {
   }
 
   subtotal() {
-    return this.items.reduce((sum, item) => sum + item.subtotal(), 0);
+    return [...this.items.values()].reduce((sum, item) => sum + item.subtotal(), 0);
   }
 
   tax() {
@@ -54,7 +53,7 @@ class Cart {
   }
 
   checkout(paymentService) {
-    if (this.items.length === 0) throw new Error("Cart is empty");
+    if (this.items.size === 0) throw new Error("Cart is empty");
     return paymentService.charge(this.total());
   }
 }
