@@ -1,8 +1,11 @@
-function hello(name) {
+function greet(name) {
+    if (!name) {
+        throw new Error("name is required");
+    }
     return `Hello, ${name}!`;
 }
 
-const result = hello("World");
+const result = greet("World");
 console.log(result);
 var issue = "oops";
 var issue2 = "oops2";
